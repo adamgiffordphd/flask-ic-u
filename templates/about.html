@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Skeleton application demoing Heroku and Flask integration.">
-    <meta name="author" content="@gotoariel">
+    <meta name="description" content="Motivation page to IC-U">
+    <meta name="author" content="@adamgifford_phd">
     <!-- <link rel="icon" href="favicon.ico"> -->
 
-    <title>Wilkommen, bienvenue, and welcome to Heroku!</title>
+    <title>About IC-U!</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -16,9 +16,63 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12 text-left">
-          <h2>About</h2>
-          <p><a href="/">Home</a></p>
+          <h1>Optimizing ICU Management by Predicting Intensive Care Urgency (IC-U)</h1>
+          <h2>What is the problem?</h2>
+          <p>
+            Over 5 million patients annually require some form of intensive care, which requires continual and often invasive 
+            monitoring, as well as near 1-to-1 nurse-to-patient staffing in order to treat patients effectively. As a result of 
+            the complicated nature of ICU care, ICUs are one of the leading drivers of hospital costs in the US today. Hospitals 
+            are currently spending $80B a year in ICU care, and these costs are expected to double by 2030. It is no surprise then 
+            that the operating cost of maintaining an intensive care unit is a major pain point for hospitals across the country and 
+            that innovations are necessary to help drive costs down.
+          </p>
+          <h2>My solution</h2>
+          <p>
+            The basis of IC-U is to quantify a risk value (called the "IC-U" factor) reflecting intensive care urgency for patients 
+            that present to a hospital. My solution would take in a patient’s health and demographic information and estimate the 
+            likelihood that s/he may need immediate intensive care. Additionally, it will ouput potential interventions that may 
+            reduce this risk.
+          </p>
+          <h2>Value proposition</h2>
+          <p>
+            On an individual basis, quantifying intensive care urgency will allow hospitals to identify those patients most likely in 
+            need of intensive care sooner and suggest potential interventions that may reduce this urgency.
+          </p>    
+          <p>
+            At an aggregate level, the ability to classify patients by apparent intensive care urgency will provide hospitals the ability
+            to optimize patient triaging and monitoring and better manage and predict ICU capacity. Combined, all of these benefits would
+            lead to decreases in mortality and morbidity, reductions in ICU stays and stay durations, potentially more streamlined ICU staffing,
+            and ultimately reductions in operating costs.
+          </p>
+          <h2>How it works</h2>
+            <p>IC-U works as follows:</p>
+            <ol>
+                <li>Hospital staff inputs patient information into a web form</li>
+                <li>
+                    Upon submission, the predictive model analyzes the patient data and compute a risk factor that quantifies the "urgency"
+                    that this patient will need intensive care. 
+                </li>
+                <li>
+                    Finally, the app displays the results with a description of the main contributors to the IC-U factor, and potential 
+                    interventions that may be associated with a reduction in the risk factor.
+                </li>
+            </ol>
+            <p>
+                As more information for a patient is gathered, the inputs can be updated and a new IC-U factor can be calculated and displayed as needed.
+            </p>
         </div>
+        <div class="row">
+            <div class="col-lg-12 text-left links">
+              <h2>Go To:</h2>
+              <ul>
+                <li><a href="/">Back to homepage</a></li>
+                <li><a href="/howto">How to use IC-U</a></li>
+                <li><a href="/forms">Get started</a></li>
+                <li><a target="_blank" href="https://mimic.physionet.org">More information on the MIMIC Database</a></li>
+                <li><a target="_blank" href="https://github.com/adamgiffordphd/imminent_icu_stays">Visit the GitHub repo for this project</a></li>
+              </ul>
+            </div>
+          </div>
       </div>
     </div>
     <!-- Bootstrap core JavaScript
