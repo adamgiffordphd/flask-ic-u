@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Motivation page to IC-U">
+        <meta name="author" content="@adamgifford_phd">
+        <!-- <link rel="icon" href="favicon.ico"> -->
+        <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.2.3.min.js"
+    crossorigin="anonymous"></script>
+
+        <title>IC-U Results</title>
+
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="col-lg-12 text-left">
+                <h1>Results from IC-U</h1>
+                <h2>IC-U Factor</h2>
+
+                {{ div | safe }}
+                {{ script | safe }}
+                <p>FILL IN TEXT THAT DESCRIBES RESULTS</p><!-- Probably needs to be an input here also -->
+
+                <h2>Posible interventions</h2>
+                <ul>
+                    <li>FOO</li><!-- Probably needs to be an input here also -->
+                    <li>BAR</li>
+                    <li>BAZ</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-left links">
+              <h2>Go To:</h2>
+              <ul>
+                <li><a href="/">Back to homepage</a></li>
+                <li><a href="/howto">How to use IC-U</a></li>
+                <li><a href="/forms">Update inputs</a></li>
+                <li><a target="_blank" href="https://mimic.physionet.org">More information on the MIMIC Database</a></li>
+                <li><a target="_blank" href="https://github.com/adamgiffordphd/imminent_icu_stays">Visit the GitHub repo for this project</a></li>
+              </ul>
+            </div>
+          </div>
+      </div>
+    </body>
+</html>
