@@ -1,15 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, current_app, url_for
 from bokeh.plotting import figure
-from bokeh.palettes import Spectral4
+from bokeh.palettes import Spectral4, Viridis4
 from bokeh.models import ColumnDataSource
 from bokeh.embed import components
 from bokeh.resources import CDN
+from bokeh.layouts import Column
 import numpy as np
 import pandas as pd
 import pickle
+import glob
 
 app = Flask(__name__)
 app.vars = {}
+
+slidedir = '.static/'
 
 # load urgency model data
 urg_model = './models/log__URGENCY__20210130.pkl'
@@ -46,6 +50,7 @@ def createFeatureCoeffDict(coefs,features):
   return feats_coeffs
 
 def getMostImportantFeaturesUrg(feature_imp_urg, x_test, n_most=4):
+  print(x_test)
   x_test = urg_feats_un.transform(x_test).toarray()[0]
   features_scores = [(f[0], x * f[1]) for x,f in zip(x_test,feature_imp_urg)]
   most_important = sorted(features_scores, key=lambda x: -abs(x[1]))
@@ -63,11 +68,16 @@ def make_urgency_plot(y_pred_proba):
   factors = ['stable','questionable','urgent','immediate']
   source = ColumnDataSource(data=dict(factors=factors, probs=y_pred_proba, color=Spectral4))
 
-  p = figure(x_range=factors, plot_height=250, title="IC-U Risk Factor",
-            plot_width=300, toolbar_location=None, tools="")
+  ttl = "IC-U Risk Factor: {}".format(factors[y_pred_proba.argmax()].upper())
+  p = figure(x_range=factors, plot_height=250, title=ttl,
+          plot_width=400, toolbar_location=None, tools="")
 
   p.vbar(x='factors', top='probs', color='color', width=0.4, source=source)
 
+  p.title.text_font_size = '16pt'
+  p.yaxis.axis_label_text_font_size = '14pt'
+  p.yaxis.major_label_text_font_size = '11pt'
+  p.xaxis.major_label_text_font_size = '11pt'
   p.xgrid.grid_line_color = None
   p.y_range.start = 0
   p.yaxis.axis_label = 'P(category)'
@@ -86,6 +96,10 @@ def make_urgency_factors_plot(most_imp_feats_urg):
 
   p.hbar(y='factors', right='scores', height=0.4, source=source)
 
+  p.title.text_font_size = '16pt'
+  p.yaxis.axis_label_text_font_size = '14pt'
+  p.yaxis.major_label_text_font_size = '11pt'
+  p.xaxis.major_label_text_font_size = '11pt'
   p.ygrid.grid_line_color = None
   p.x_range.start = 0
   p.xaxis.visible = False
@@ -99,6 +113,10 @@ def intro():
 def howto():
   return render_template('howto.html')
 
+@app.route('/example-urg')
+def exampleurg():
+  return render_template('example-urg.html')
+
 @app.route('/about')
 def about():
   return render_template('about.html')
@@ -107,40 +125,48 @@ def about():
 def forms():
   return render_template('forms.html')
 
-@app.route('/data', methods=['POST'])
+@app.route('/slides')
+def slides():
+    slide = request.args.get('slide')
+    html = 'slide' + slide + '.html'
+    return current_app.send_static_file(html)
+    # return url_for('static', filename=slide)
+
+@app.route('/display', methods=['POST'])
 def display():
   # need all 26 columns to use estimator data transformations (even though only 
   # 10 data columns are actually used in the model)
-  app.vars['SUBJECT_ID'] = request.form.get('patientid')
-  app.vars['GENDER'] = request.form.get('gender')
-  app.vars['HADM_ID'] = 999999
-  app.vars['ADMITTIME'] = np.nan
-  app.vars['DISCHTIME'] = np.nan
-  app.vars['ADMISSION_TYPE'] = request.form.get('admissiontype')
-  app.vars['ADMISSION_LOCATION'] = request.form.get('admissionlocation')
-  app.vars['INSURANCE'] = request.form['insurance']
-  app.vars['LANGUAGE'] = request.form.get('language')
-  app.vars['RELIGION'] = request.form['religion']
-  app.vars['MARITAL_STATUS'] = request.form['maritalstatus']
-  app.vars['ETHNICITY'] = request.form.get('ethnicity')
-  app.vars['DIAGNOSIS'] = request.form.get('diagnosis')
-  app.vars['HOSPITAL_EXPIRE_FLAG'] = np.nan
-  app.vars['HAS_CHARTEVENTS_DATA'] = np.nan
-  app.vars['HOSPITAL_DAYS'] = np.nan
-  app.vars['ADMIT_AGE'] = request.form.get('age')
-  app.vars['ICUSTAY_ID'] = np.nan
-  app.vars['DBSOURCE'] = np.nan
-  app.vars['INTIME'] = np.nan
-  app.vars['LOS'] = np.nan
-  app.vars['DAYS_ADM_TO_ICU'] = np.nan
-  app.vars['SAMEDAY_ADM_TO_ICU'] = np.nan
-  app.vars['ADM_TO_ICU_100p'] = np.nan
-  app.vars['ADM_TO_ICU_90m'] = np.nan
-  app.vars['ICU_URGENCY'] = np.nan
+  app.vars['SUBJECT_ID'] = [int(request.form.get('patientid'))]
+  app.vars['GENDER'] = [request.form.get('gender')]
+  app.vars['HADM_ID'] = [999999]
+  app.vars['ADMITTIME'] = [4]
+  app.vars['DISCHTIME'] = [4]
+  app.vars['ADMISSION_TYPE'] = [request.form.get('admissiontype')]
+  app.vars['ADMISSION_LOCATION'] = [request.form.get('admissionlocation')]
+  app.vars['INSURANCE'] = [request.form['insurance']]
+  app.vars['LANGUAGE'] = [request.form.get('language')]
+  app.vars['RELIGION'] = [request.form['religion']]
+  app.vars['MARITAL_STATUS'] = [request.form['maritalstatus']]
+  app.vars['ETHNICITY'] = [request.form.get('ethnicity')]
+  app.vars['DIAGNOSIS'] = [request.form.get('diagnosis')]
+  app.vars['HOSPITAL_EXPIRE_FLAG'] = [0]
+  app.vars['HAS_CHARTEVENTS_DATA'] = [0]
+  app.vars['HOSPITAL_DAYS'] = [0]
+  app.vars['ADMIT_AGE'] = [request.form.get('age')]
+  app.vars['ICUSTAY_ID'] = [888888]
+  app.vars['DBSOURCE'] = ['']
+  app.vars['INTIME'] = [4]
+  app.vars['LOS'] = [0]
+  app.vars['DAYS_ADM_TO_ICU'] = [0]
+  app.vars['SAMEDAY_ADM_TO_ICU'] = [0]
+  app.vars['ADM_TO_ICU_100p'] = [0]
+  app.vars['ADM_TO_ICU_90m'] = [0]
+  app.vars['ICU_URGENCY'] = [0]
   
   # app.vars['TEXT'] = request.form.get('clinicalnotes') # not implemented yet, so do nothing 
                                                          # with clinical notes at this time
-  x_test = pd.DataFrame(app.vars, index = [0])
+  x_test = pd.DataFrame.from_dict(app.vars, orient = 'columns')
+  print(x_test.columns)
   # y_pred_urg, y_pred_proba_urg, y_pred_los = make_predictions(x_test)
   y_pred_urg, y_pred_proba_urg = make_predictions(x_test)
 
@@ -154,30 +180,35 @@ def display():
 
   p_urg = make_urgency_plot(y_pred_proba_urg)
   p_urg_factors = make_urgency_factors_plot(most_imp_feats_urg)
+  layout = Column(p_urg, p_urg_factors)
+  script, div = components(layout)
 
-  return redirect(url_for('display')) 
+  return render_template('display.html',
+                          script=script, div=div)
+  # return redirect(url_for('display')) 
 
-# @app.route('/display')
-# def display():
-#   # x_test = pd.from_dict(app.vars)
+@app.route('/display-example', methods=['POST'])
+def displayexample():
+  if int(request.form.get('patientid'))==88409:
+    example_file = './examples/urg_examp_ix28_20210201.pkl'
+    
+    text = '''
+    Patient 88409 has been identified as having 'urgent' need of intensive care.<br />
+    Urgent status indicates a likely need for ICU admission within 24 hours.<br />
+    The main factors contributing to this estimate are: gender ("male"), <br />
+    diagnosis information ("arm infection"), and insurance type ("Government").
+    '''
+    los = 3.49
 
-#   # y_pred = make_prediction(x_test)
-  
-#   # plots = make_plots(y_pred)
+  y_pred_proba_urg, most_imp_feats_urg = pickle.load(open(example_file,'rb'))
 
-#   n = 100
+  p_urg = make_urgency_plot(y_pred_proba_urg)
+  p_urg_factors = make_urgency_factors_plot(most_imp_feats_urg)
+  layout = Column(p_urg, p_urg_factors)
+  script, div = components(layout)
 
-#   x = np.random.random(n) * 10
-#   y = np.random.random(n) * 10
-#   s = np.random.random(n)
-
-#   p = figure(width=300, height=300)
-#   p.circle(x, y, radius=s, fill_alpha=0.6)
-
-#   script, div = components(p)
-
-#   return render_template('display.html',
-#                           script=script, div=div)
+  return render_template('display.html',
+                          script=script, div=div, text=text, los=los)
 
 if __name__ == '__main__':
   app.run(port=33507, debug=True)
