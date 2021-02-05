@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, current_app, url_for
 from bokeh.plotting import figure
 from bokeh.palettes import Spectral4, Viridis4
-from bokeh.models import ColumnDataSource
+from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.embed import components
 from bokeh.resources import CDN
 from bokeh.layouts import Column
@@ -50,11 +50,11 @@ def createFeatureCoeffDict(coefs,features):
   return feats_coeffs
 
 def getMostImportantFeaturesUrg(feature_imp_urg, x_test, n_most=4):
-  print(x_test)
   x_test = urg_feats_un.transform(x_test).toarray()[0]
-  features_scores = [(f[0], x * f[1]) for x,f in zip(x_test,feature_imp_urg)]
-  most_important = sorted(features_scores, key=lambda x: -abs(x[1]))
-  return most_important[:n_most]
+  total = sum([abs(fs[1]) for fs in feature_imp_urg])
+  features_scores = [(f[0], x * f[1] / total) for x,f in zip(x_test,feature_imp_urg)]
+  most_important = sorted(features_scores, key=lambda x: abs(x[1]))
+  return most_important[-n_most:]
 
 def make_predictions(x_test, urgency=True, los=False):
   # get prediction from model
@@ -67,10 +67,17 @@ def make_predictions(x_test, urgency=True, los=False):
 def make_urgency_plot(y_pred_proba):
   factors = ['stable','questionable','urgent','immediate']
   source = ColumnDataSource(data=dict(factors=factors, probs=y_pred_proba, color=Spectral4))
-
+  
+  hover = HoverTool(
+      tooltips=[
+          ("Level", "@factors"),
+          ("Probability", "@probs"),
+      ]
+  )
+  
   ttl = "IC-U Risk Factor: {}".format(factors[y_pred_proba.argmax()].upper())
   p = figure(x_range=factors, plot_height=250, title=ttl,
-          plot_width=400, toolbar_location=None, tools="")
+          plot_width=450, tools=[hover])
 
   p.vbar(x='factors', top='probs', color='color', width=0.4, source=source)
 
@@ -87,12 +94,19 @@ def make_urgency_plot(y_pred_proba):
 def make_urgency_factors_plot(most_imp_feats_urg):
   y = [m[0] for m in most_imp_feats_urg]
   x = [abs(m[1]) for m in most_imp_feats_urg]
-  x = [val/np.round(max(x)) for val in x]
+  x = [val/max(x) for val in x]
 
-  source = ColumnDataSource(dict(factors=y, scores=x,))
+  source = ColumnDataSource(dict(factors=y, scores=x))
 
+  hover = HoverTool(
+      tooltips=[
+          ("Factor", "@factors"),
+          ("Scaled Score", "@scores"),
+      ]
+  )
+  
   p = figure(y_range=y, plot_height=250, title="Main Factors",
-            plot_width=400, toolbar_location=None, tools="")
+          plot_width=450, tools=[hover])
 
   p.hbar(y='factors', right='scores', height=0.4, source=source)
 
@@ -190,7 +204,7 @@ def display():
 @app.route('/display-example', methods=['POST'])
 def displayexample():
   if int(request.form.get('patientid'))==88409:
-    example_file = './examples/urg_examp_ix28_20210201.pkl'
+    example_file = './examples/urg_examp_ix28_20210204.pkl'
     
     text = '''
     Patient 88409 has been identified as having 'urgent' need of intensive care.<br />
