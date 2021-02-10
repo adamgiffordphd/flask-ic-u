@@ -1,14 +1,13 @@
-from flask import Flask, render_template, request, current_app, url_for
+from flask import Flask, render_template, request, current_app #,url_for
 from bokeh.plotting import figure
-from bokeh.palettes import Spectral4, Viridis4
+from bokeh.palettes import Spectral4
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.embed import components
-from bokeh.resources import CDN
+# from bokeh.resources import CDN
 from bokeh.layouts import Column
 import numpy as np
 import pandas as pd
 import pickle
-import glob
 
 app = Flask(__name__)
 app.vars = {}
@@ -145,6 +144,10 @@ def slides():
     html = 'slide' + slide + '.html'
     return current_app.send_static_file(html)
     # return url_for('static', filename=slide)
+
+@app.route('/iframe')
+def iframe():
+  return render_template('iframe.html')
 
 @app.route('/display', methods=['POST'])
 def display():
