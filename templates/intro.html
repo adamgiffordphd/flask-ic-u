@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Introduction page to IC-U">
     <meta name="author" content="@adamgifford_phd">
+    
     <!-- <link rel="icon" href="favicon.ico"> -->
-
+    {% import "macros.html" as macros %}
     <title>Welcome to IC-U!</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   </head>
   <body>
+    <div>
+      {{macros.build_site_navigation(pages=pages, selected="Page Name")}}
+    </div>
     <div class="container">
       <div class="row">
         <div class="col-lg-12 text-left">
@@ -38,7 +42,6 @@
           </p>
           <ul>
             <li><a href="/about">About</a></li>
-            <!-- <li><a href="/slides?slide=1">See the slidedeck</a></li> -->
             <li><a href="/iframe">See the slidedeck</a></li>
             <li><a href="/howto">How to use IC-U</a></li>
             <li><a href="/example-urg">See an example</a></li>

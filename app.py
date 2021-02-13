@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, current_app #,url_for
+from flask import Flask, render_template, request, current_app, url_for
 from bokeh.plotting import figure
 from bokeh.palettes import Spectral4
 from bokeh.models import ColumnDataSource, HoverTool
@@ -13,6 +13,17 @@ app = Flask(__name__)
 app.vars = {}
 
 slidedir = '.static/'
+
+def generate_page_list():
+    pages = [
+        # {"name": "Intro", "url": url_for("")},
+        {"name": "About", "url": url_for("about")},
+        {"name": "Slide Deck", "url": url_for("iframe")},
+        {"name": "How to", "url": url_for("howto")},
+        {"name": "Get Started", "url": url_for("forms")},
+        # {"name": "Performance", "url": url_for("performance")}
+    ]
+    return pages
 
 # load urgency model data
 urg_model = './models/log__URGENCY__20210130.pkl'
@@ -120,7 +131,7 @@ def make_urgency_factors_plot(most_imp_feats_urg):
 
 @app.route('/')
 def intro():
-  return render_template('intro.html')
+  return render_template('intro.html', pages=generate_page_list())
 
 @app.route('/howto')
 def howto():
