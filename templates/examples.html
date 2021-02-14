@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %} Examples {% endblock %}
+
+{% block html_head %}
+<meta name="description" content="examples">
+{% endblock %}
+
+{% block sidebar %}
+<a href="/">Intro</a>
+<a href="/about">About</a>
+<a href="/iframe">Slide Deck</a>
+<a href="/howto">How-To</a>
+<div class="nav-second-level active">
+  <a class="active" href="/examples">Examples</a>
+  <ul class="examples">
+    <li><a href="/examples?ex=stable">Stable</a></li>
+    <li><a href="/examples?ex=questionable">Questionable</a></li>
+    <li><a href="/examples?ex=urgent">Urgent</a></li>
+    <li><a href="/examples?ex=immediate">Immediate</a></li>
+  </ul>
+</div>
+<a href="/forms">Get Started</a>
+<a href="/performance">Model Performance</a>
+<div class="display">
+  <a href="/display">Results</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="standard">
+    <h1>See some examples</h1>
+    <h2><a href="examples?ex=stable">Stable patient</a></h2>
+    <p>
+      A stable patient is one that IC-U predicts will not need intensive care within 5 days of
+      hospital admission.
+    </p>
+    <h2><a href="examples?ex=questionable">Questionable patient</a></h2>
+    <p>
+        A questionable patient is one that IC-U predicts will need intensive care between 1 and 5 
+        days from hospital admission.
+    </p>
+    <h2><a href="examples?ex=urgent">Urgent patient</a></h2>
+    <p>
+        An urgent patient is one that IC-U predicts will need intensive care between 1 and 24 
+        hours from hospital admission.
+    </p>
+    <h2><a href="examples?ex=immediate">Immediate patient</a></h2>
+    <p>
+        An urgent patient is one that IC-U predicts will need intensive care less than 1 hour 
+        from hospital admission.
+    </p>
+</div>
+{% endblock %}

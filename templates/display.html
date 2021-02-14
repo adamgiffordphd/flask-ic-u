@@ -1,43 +1,46 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="Motivation page to IC-U">
-        <meta name="author" content="@adamgifford_phd">
-        <!-- <link rel="icon" href="favicon.ico"> -->
-        <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.2.3.min.js"
+{% extends "base.html" %}
+
+{% block title %} IC-U Results {% endblock %}
+
+{% block html_head %}
+<meta name="description" content="Results">
+
+<script 
+    src="https://cdn.bokeh.org/bokeh/release/bokeh-2.2.3.min.js"
     crossorigin="anonymous"></script>
 
-        <title>IC-U Results</title>
+{% endblock %}
 
-        <!-- Bootstrap core CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    </head>
-    <body>
-        <div class="container">
-            <div class="col-lg-12 text-left">
-                <h1>Results from IC-U</h1>
+{% block sidebar %}
+<a href="/">Intro</a>
+<a href="/about">About</a>
+<a href="/iframe">Slide Deck</a>
+<a href="/howto">How-To</a>
+<div {% if 'active' in exs.values() %} class="nav-second-level active" {% else %} class="nav-second-level" {% endif %}>
+  <a {% if 'active' in exs.values() %} class="active" {% endif %} href="/examples">Examples</a>
+  <ul class="examples">
+    <li><a class={{exs.stable|safe}} href="/examples?ex=stable">Stable</a></li>
+    <li><a class={{exs.questionable|safe}} href="/examples?ex=questionable">Questionable</a></li>
+    <li><a class={{exs.urgent|safe}} href="/examples?ex=urgent">Urgent</a></li>
+    <li><a class={{exs.immediate|safe}} href="/examples?ex=immediate">Immediate</a></li>
+  </ul>
+</div>
+<a href="/forms">Get Started</a>
+<a href="/performance">Model Performance</a>
+<div class="display active">
+  <a class="active" href="/display">Results</a>
+</div>
+{% endblock %}
 
-                {{ div | safe }}
-                {{ script | safe }}
-                <br>
-                <p>{{ text | safe }}</p>
-                <h3>Estimated LOS: {{ los | safe }} days</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 text-left links">
-              <h2>Go To:</h2>
-              <ul>
-                <li><a href="/">Back to homepage</a></li>
-                <li><a href="/howto">How to use IC-U</a></li>
-                <li><a href="/forms">Update inputs</a></li>
-                <li><a target="_blank" href="https://mimic.physionet.org">More information on the MIMIC Database</a></li>
-                <li><a target="_blank" href="https://github.com/adamgiffordphd/imminent_icu_stays">Visit the GitHub repo for this project</a></li>
-              </ul>
-            </div>
-          </div>
-      </div>
-    </body>
-</html>
+{% block content %}
+<div class="standard">
+    <h1>Results from IC-U</h1>
+    <h3 class="figtitle">IC-U Risk Factor: <span style="{{ color | safe }}">{{ risk | safe }}</span></h3>
+    {{ div | safe }}
+    {{ script | safe }}
+    <br>
+    <p>{{ text | safe }}</p>
+
+    <h3>Estimated LOS: {{ los | safe }} days</h3>
+</div>
+{% endblock %}

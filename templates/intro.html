@@ -1,61 +1,30 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Introduction page to IC-U">
-    <meta name="author" content="@adamgifford_phd">
-    
-    <!-- <link rel="icon" href="favicon.ico"> -->
-    {% import "macros.html" as macros %}
-    <title>Welcome to IC-U!</title>
+{% extends "base.html" %}
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  </head>
-  <body>
-    <div>
-      {{macros.build_site_navigation(pages=pages, selected="Page Name")}}
-    </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 text-left">
-          <h2>Welcome to IC-U!</h2>
-          <p>
-            ICU care costs and short-term capacity are major pain points for hospitals <br />
-            across the country. Using the MIMIC-III database and a combination of random-<br />
-            forest, ridge, and logistic regression, IC-U culminates in an web app that <br />
-            uses patient demographic and clinical information to produce an urgency score <br />
-            (aptly called "Intensive Care - Urgency", or <strong>IC-U</strong>) for needed intensive care <br />
-            and an estimated length-of-stay in the ICU. <br> <br>
+{% block html_head %}
+<meta name="description" content="Introduction">
+{% endblock %}
 
-            By predicting intensive care urgency and length of stay, hospitals can better <br />
-            optimize patient care, flow, and logistics, and better prepare for anticipated <br />
-            spikes in ICU capacity needs. In turn, this information has the potential to <br />
-            improve patient outcomes and decrease operating costs. <br><br>
+{% block content %}
+<div class="standard">
+  <h1>Welcome to IC-U!</h1>
+  <p>
+    ICU care costs and short-term capacity are major pain points for hospitals 
+    across the country. Using the MIMIC-III database and a combination of random-
+    forest, ridge, and logistic regression, IC-U culminates in an web app that 
+    uses patient demographic and clinical information to produce an urgency score 
+    (aptly called "Intensive Care - Urgency", or <strong>IC-U</strong>) for needed intensive care 
+    and an estimated length-of-stay in the ICU. <br> <br>
 
-            Check out the links below to learn more about the project, view the slidedeck, <br />
-            see how IC-U works, test the app yourself, or visit the MIMIC-III database or <br />
-            the project Github page.<br><br>
+    By predicting intensive care urgency and length of stay, hospitals can better 
+    optimize patient care, flow, and logistics, and better prepare for anticipated
+    spikes in ICU capacity needs. In turn, this information has the potential to 
+    improve patient outcomes and decrease operating costs. <br><br>
 
-            Enjoy! <br>
-          </p>
-          <ul>
-            <li><a href="/about">About</a></li>
-            <li><a href="/iframe">See the slidedeck</a></li>
-            <li><a href="/howto">How to use IC-U</a></li>
-            <li><a href="/example-urg">See an example</a></li>
-            <li><a href="/forms">Get started right away</a></li>
-            <li><a target="_blank" href="https://mimic.physionet.org">More information on the MIMIC Database</a></li>
-            <li><a target="_blank" href="https://github.com/adamgiffordphd/imminent_icu_stays">Visit the github repo for this project</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  </body>
-</html>
+    Check out the links below to learn more about the project, view the slidedeck, 
+    see how IC-U works, test the app yourself, or visit the <a target="_blank" href="https://mimic.physionet.org">MIMIC-III database</a> or 
+    the project <a target="_blank" href="https://github.com/adamgiffordphd/imminent_icu_stays">Github page</a>.<br><br>
+
+    Enjoy! <br>
+  </p>
+</div>
+{% endblock %}

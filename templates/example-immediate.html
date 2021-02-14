@@ -1,10 +1,10 @@
 
 {% extends "base.html" %}
 
-{% block title %} Submission Form {% endblock %}
+{% block title %} Urgent Example {% endblock %}
 
 {% block html_head %}
-<meta name="description" content="Form">
+<meta name="description" content="urgent example">
 {% endblock %}
 
 {% block sidebar %}
@@ -12,16 +12,16 @@
 <a href="/about">About</a>
 <a href="/iframe">Slide Deck</a>
 <a href="/howto">How-To</a>
-<div class="nav-second-level">
-  <a href="/examples">Examples</a>
+<div class="nav-second-level active">
+  <a class="active" href="/examples">Examples</a>
   <ul class="examples">
     <li><a href="/examples?ex=stable">Stable</a></li>
     <li><a href="/examples?ex=questionable">Questionable</a></li>
     <li><a href="/examples?ex=urgent">Urgent</a></li>
-    <li><a href="/examples?ex=immediate">Immediate</a></li>
+    <li><a class="active" href="/examples?ex=immediate">Immediate</a></li>
   </ul>
 </div>
-<a class="active" href="/forms">Get Started</a>
+<a href="/forms">Get Started</a>
 <a href="/performance">Model Performance</a>
 <div class="display">
   <a href="/display">Results</a>
@@ -30,16 +30,17 @@
 
 {% block content %}
 <div class="standard">
-  <h1>Input Patient Information</h1>
+  <h2>Input Patient Information</h2>
   <p>
     Input as much information as is available. Leave fields blank otherwise.
     <br><br>
-    <form action="/display" method="post">
+    <form action="/display-example" method="post">
       <label for="patientid">Patient ID:</label>
-      <input type="text" id="patientid" name="patientid"><br>
+      <input type="text" id="patientid" name="patientid" value='88409'><br>
       <h3>Demographic Information</h3>
       <label for="age">Age:</label>
       <select name="age" id="age">
+        <option value="28">28</option>
         <option value="nan">--</option>
         <option value="0">0</option>
         <option value="1">1</option>
@@ -168,12 +169,13 @@
       </select><br>
       <label for="gender">Gender:</label>
       <select name="gender" id="gender">
-        <option value="null">--</option>
         <option value="male">M</option>
+        <option value="null">--</option>
         <option value="female">F</option>
       </select><br>
       <label for="religion">Religion:</label>
       <select name="religion" id="religion">
+        <option value="NOT SPECIFIED">NOT SPECIFIED</option>
         <option value="NOT SPECIFIED">--</option>
         <option value="CATHOLIC">CATHOLIC</option>
         <option value="JEWISH">JEWISH</option>
@@ -201,6 +203,7 @@
       </select><br>
       <label for="language">Language:</label>
       <select name="language" id="language">
+        <option value="SPAN">SPAN</option>
         <option value="***">--</option>
         <option value="ENGL">ENGL</option>
         <option value="HAIT">HAIT</option>
@@ -298,6 +301,7 @@
       </select><br>
       <label for="maritalstatus">Marital Status:</label>
       <select name="maritalstatus" id="maritalstatus">
+        <option value="MARRIED">MARRIED</option>
         <option value="UNKNOWN (DEFAULT)">--</option>
         <option value="SINGLE">SINGLE</option>
         <option value="DIVORCED">DIVORCED</option>
@@ -310,6 +314,7 @@
       </select><br>
       <label for="ethnicity">Ethnicity:</label>
       <select name="ethnicity" id="ethnicity">
+        <option value="HISPANIC/LATINO">HISPANIC/LATINO</option>
         <option value="UNKNOWN">--</option>
         <option value="WHITE">WHITE</option>
         <option value="BLACK">BLACK</option>
@@ -326,6 +331,7 @@
       <h3>Admissions Information</h3>
       <label for="admissiontype">Admission Type:</label>
       <select name="admissiontype" id="admissiontype">
+        <option value="EMERGENCY">EMERGENCY</option>
         <option value="ELECTIVE">--</option>
         <option value="ELECTIVE">ELECTIVE</option>
         <option value="EMERGENCY">EMERGENCY</option>
@@ -334,6 +340,7 @@
       </select><br>
       <label for="admissionlocation">Admission Location:</label>
       <select name="admissionlocation" id="admissionlocation">
+        <option value="EMERGENCY ROOM ADMIT">EMERGENCY ROOM ADMIT</option>
         <option value="** INFO NOT AVAILABLE **">--</option>
         <option value="PHYS REFERRAL/NORMAL DELI">PHYS REFERRAL/NORMAL DELI</option>
         <option value="TRANSFER FROM HOSP/EXTRAM">TRANSFER FROM HOSP/EXTRAM</option>
@@ -349,6 +356,7 @@
       </select><br>
       <label for="insurance">Insurance:</label>
       <select name="insurance" id="insurance">
+        <option value="Government">Government</option>
         <option value="Medicare">--</option>
         <option value="Medicare">Medicare</option>
         <option value="Self Pay">Self Pay</option>
@@ -358,7 +366,7 @@
       </select><br><br>
       <h3>Clinical Information</h3>
       <label for="diagnosis">Preliminary Diagnoses:</label><br>
-      <textarea id="diagnosis" name="diagnosis" rows="2" cols="70"></textarea><br>
+      <textarea id="diagnosis" name="diagnosis" rows="2" cols="70">L ARM INFECTION</textarea><br>
       <label for="clinicalnotes">Clinical Notes:</label><br>
       <textarea id="clinicalnotes" name="clinicalnotes" rows="5" cols="70"></textarea>
       <br><br>

@@ -1,19 +1,18 @@
-
 {% extends "base.html" %}
 
-{% block title %} How-To {% endblock %}
+{% block title %} Err: Patient ID Not Recognized {% endblock %}
 
 {% block html_head %}
-<meta name="description" content="How To">
+<meta name="description" content="Example error">
 {% endblock %}
 
 {% block sidebar %}
 <a href="/">Intro</a>
 <a href="/about">About</a>
 <a href="/iframe">Slide Deck</a>
-<a class="active" ref="/howto">How-To</a>
-<div class="nav-second-level">
-  <a href="/examples">Examples</a>
+<a href="/howto">How-To</a>
+<div class="nav-second-level active">
+  <a class="active" href="/examples">Examples</a>
   <ul class="examples">
     <li><a href="/examples?ex=stable">Stable</a></li>
     <li><a href="/examples?ex=questionable">Questionable</a></li>
@@ -29,11 +28,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="slidedeck" style="position:relative;width:86%;height:0;padding-bottom:calc(56.25% + 40px);">
-  <iframe 
-  allowfullscreen 
-  style="position:absolute; width: 100%; height: 90%;border: solid 1px #333;" 
-  src="https://www.beautiful.ai/embed/-MTT6vAqZa0DGHl5G4L2?utm_source=beautiful_player&utm_medium=embed&utm_campaign=-MTSFFA4XND8KILJ0P0r">
-  </iframe>
+<div class="standard">
+  <h1><span style="color:rgb(255,0,0);">Error!</span></h1>
+  <p>
+      Patient ID {{ id | safe }} not recognized as a valid example patient. Please 
+      choose one of {68409, 78409, 88409, 98409}. Please click on one of the links
+      on the the sidebar under <em>Examples</em> to view a valid example.
+  </p>
 </div>
 {% endblock %}

@@ -85,8 +85,7 @@ def make_urgency_plot(y_pred_proba):
       ]
   )
   
-  ttl = "IC-U Risk Factor: {}".format(factors[y_pred_proba.argmax()].upper())
-  p = figure(x_range=factors, plot_height=250, title=ttl,
+  p = figure(x_range=factors, plot_height=250,
           plot_width=450, tools=[hover])
 
   p.vbar(x='factors', top='probs', color='color', width=0.4, source=source)
@@ -99,7 +98,7 @@ def make_urgency_plot(y_pred_proba):
   p.y_range.start = 0
   p.yaxis.axis_label = 'P(category)'
 
-  return p
+  return p, factors[y_pred_proba.argmax()].upper()
 
 def make_urgency_factors_plot(most_imp_feats_urg):
   y = [m[0] for m in most_imp_feats_urg]
@@ -137,6 +136,15 @@ def intro():
 def howto():
   return render_template('howto.html')
 
+@app.route('/examples')
+def examples():
+  ex = request.args.get('ex')
+  if ex is None:
+    page = 'examples.html'
+  else:
+    page = 'example-' + ex + '.html'
+  return render_template(page)
+
 @app.route('/example-urg')
 def exampleurg():
   return render_template('example-urg.html')
@@ -148,13 +156,6 @@ def about():
 @app.route('/forms')
 def forms():
   return render_template('forms.html')
-
-@app.route('/slides')
-def slides():
-    slide = request.args.get('slide')
-    html = 'slide' + slide + '.html'
-    return current_app.send_static_file(html)
-    # return url_for('static', filename=slide)
 
 @app.route('/iframe')
 def iframe():
@@ -213,13 +214,34 @@ def display():
 
   return render_template('display.html',
                           script=script, div=div)
-  # return redirect(url_for('display')) 
+
+@app.route('/performance')
+def performance():
+  return render_template('performance.html')
 
 @app.route('/display-example', methods=['POST'])
 def displayexample():
-  if int(request.form.get('patientid'))==88409:
+  exs_dict = {}
+  exs_dict['immediate'] = 'inactive'
+  exs_dict['urgent'] = 'inactive'
+  exs_dict['questionable'] = 'inactive'
+  exs_dict['stable'] = 'inactive'
+
+  if int(request.form.get('patientid'))==98409:
     example_file = './examples/urg_examp_ix28_20210204.pkl'
-    
+    exs_dict['immediate'] = 'active'
+    color = 'color:rgb(215, 25, 28);'
+    text = '''
+    Patient 98409 has been identified as having 'urgent' need of intensive care.<br />
+    Urgent status indicates a likely need for ICU admission within 24 hours.<br />
+    The main factors contributing to this estimate are: gender ("male"), <br />
+    diagnosis information ("arm infection"), and insurance type ("Government").
+    '''
+    los = 3.49
+  elif int(request.form.get('patientid'))==88409:
+    example_file = './examples/urg_examp_ix28_20210204.pkl'
+    exs_dict['urgent'] = 'active'
+    color = 'color:rgb(253, 174, 97);'
     text = '''
     Patient 88409 has been identified as having 'urgent' need of intensive care.<br />
     Urgent status indicates a likely need for ICU admission within 24 hours.<br />
@@ -227,16 +249,42 @@ def displayexample():
     diagnosis information ("arm infection"), and insurance type ("Government").
     '''
     los = 3.49
+  elif int(request.form.get('patientid'))==78409:
+    example_file = './examples/urg_examp_ix28_20210204.pkl'
+    exs_dict['questionable'] = 'active'
+    color = 'color:rgb(171, 221, 164);'
+    text = '''
+    Patient 78409 has been identified as having 'urgent' need of intensive care.<br />
+    Urgent status indicates a likely need for ICU admission within 24 hours.<br />
+    The main factors contributing to this estimate are: gender ("male"), <br />
+    diagnosis information ("arm infection"), and insurance type ("Government").
+    '''
+    los = 3.49
+  elif int(request.form.get('patientid'))==68409:
+    example_file = './examples/urg_examp_ix28_20210204.pkl'
+    exs_dict['stable'] = 'active'
+    color = 'color:rgb(43, 131, 186);'
+    text = '''
+    Patient 68409 has been identified as having 'urgent' need of intensive care.<br />
+    Urgent status indicates a likely need for ICU admission within 24 hours.<br />
+    The main factors contributing to this estimate are: gender ("male"), <br />
+    diagnosis information ("arm infection"), and insurance type ("Government").
+    '''
+    los = 3.49
+  else:
+    return render_template('example-error.html',id=request.form.get('patientid'))
+
 
   y_pred_proba_urg, most_imp_feats_urg = pickle.load(open(example_file,'rb'))
 
-  p_urg = make_urgency_plot(y_pred_proba_urg)
+  p_urg, risk = make_urgency_plot(y_pred_proba_urg)
   p_urg_factors = make_urgency_factors_plot(most_imp_feats_urg)
   layout = Column(p_urg, p_urg_factors)
   script, div = components(layout)
 
   return render_template('display.html',
-                          script=script, div=div, text=text, los=los)
+                          script=script, div=div, text=text, los=los,
+                          risk=risk,exs=exs_dict,color=color)
 
 if __name__ == '__main__':
   app.run(port=33507, debug=True)
