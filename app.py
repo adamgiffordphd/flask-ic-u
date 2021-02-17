@@ -101,7 +101,7 @@ def make_urgency_plot(y_pred_proba):
   return p, factors[y_pred_proba.argmax()].upper()
 
 def make_urgency_factors_plot(most_imp_feats_urg):
-  y = [m[0] for m in most_imp_feats_urg]
+  y = [m[0][:15] for m in most_imp_feats_urg]
   x = [abs(m[1]) for m in most_imp_feats_urg]
   x = [val/max(x) for val in x]
 
@@ -139,10 +139,13 @@ def howto():
 @app.route('/examples')
 def examples():
   ex = request.args.get('ex')
+  update = request.args.get('update')
   if ex is None:
     page = 'examples.html'
-  else:
+  elif update is None:
     page = 'example-' + ex + '.html'
+  else:
+    page = 'example-' + ex + '-update.html'
   return render_template(page)
 
 @app.route('/example-urg')
@@ -227,50 +230,51 @@ def displayexample():
   exs_dict['questionable'] = 'inactive'
   exs_dict['stable'] = 'inactive'
 
-  if int(request.form.get('patientid'))==98409:
-    example_file = './examples/urg_examp_ix28_20210204.pkl'
-    exs_dict['immediate'] = 'active'
-    color = 'color:rgb(215, 25, 28);'
-    text = '''
-    Patient 98409 has been identified as having 'urgent' need of intensive care.<br />
-    Urgent status indicates a likely need for ICU admission within 24 hours.<br />
-    The main factors contributing to this estimate are: gender ("male"), <br />
-    diagnosis information ("arm infection"), and insurance type ("Government").
-    '''
-    los = 3.49
-  elif int(request.form.get('patientid'))==88409:
-    example_file = './examples/urg_examp_ix28_20210204.pkl'
-    exs_dict['urgent'] = 'active'
-    color = 'color:rgb(253, 174, 97);'
-    text = '''
-    Patient 88409 has been identified as having 'urgent' need of intensive care.<br />
-    Urgent status indicates a likely need for ICU admission within 24 hours.<br />
-    The main factors contributing to this estimate are: gender ("male"), <br />
-    diagnosis information ("arm infection"), and insurance type ("Government").
-    '''
-    los = 3.49
-  elif int(request.form.get('patientid'))==78409:
-    example_file = './examples/urg_examp_ix28_20210204.pkl'
-    exs_dict['questionable'] = 'active'
-    color = 'color:rgb(171, 221, 164);'
-    text = '''
-    Patient 78409 has been identified as having 'urgent' need of intensive care.<br />
-    Urgent status indicates a likely need for ICU admission within 24 hours.<br />
-    The main factors contributing to this estimate are: gender ("male"), <br />
-    diagnosis information ("arm infection"), and insurance type ("Government").
-    '''
-    los = 3.49
-  elif int(request.form.get('patientid'))==68409:
-    example_file = './examples/urg_examp_ix28_20210204.pkl'
+  if int(request.form.get('patientid'))==43320:
+    example_file = './examples/stable_examp_loc68757_20210216.pkl'
     exs_dict['stable'] = 'active'
     color = 'color:rgb(43, 131, 186);'
     text = '''
-    Patient 68409 has been identified as having 'urgent' need of intensive care.<br />
-    Urgent status indicates a likely need for ICU admission within 24 hours.<br />
-    The main factors contributing to this estimate are: gender ("male"), <br />
-    diagnosis information ("arm infection"), and insurance type ("Government").
+    Patient 43320 has been identified as 'stable'. Stable status indicates that
+    the need for ICU admission is NOT likely within 5 days. The main factors 
+    contributing to this estimate are: gender ("M"), admission type 
+    ("ELECTIVE"), clinical notes ("cystectomy"), and language ("ENGL").
     '''
-    los = 3.49
+    los = 4.88
+  elif request.form.get('patientid')=='5285':
+    example_file = './examples/questionable_pre-urgent_examp_loc10545_20210216.pkl'
+    exs_dict['questionable'] = 'active'
+    color = 'color:rgb(171, 221, 164);'
+    text = '''
+    Patient 5285 has been identified as having 'questionable' need of intensive care. 
+    Questionable status indicates a likely need for ICU admission within 5 days. 
+    The main factors contributing to this estimate are: gender ("F"), 
+    diagnosis information ("aortic"), and clinical notes ("avr", "cabg").
+    '''
+    los = 4.02
+  elif request.form.get('patientid')=='5285 ':
+    example_file = './examples/urgent_examp_loc10547_20210216.pkl'
+    exs_dict['urgent'] = 'active'
+    color = 'color:rgb(253, 174, 97);'
+    text = '''
+    Patient 5285 has been identified as having 'urgent' need of intensive care. 
+    Urgent status indicates a likely need for ICU admission within 24 hours. 
+    The main factors contributing to this estimate are: gender ("F"), 
+    diagnosis information ("aortic", "aorta", "asymmetric").
+    '''
+    los = 4.04
+  elif int(request.form.get('patientid'))==3986:
+    example_file = './examples/immediate_examp_loc8065_20210216.pkl'
+    exs_dict['immediate'] = 'active'
+    color = 'color:rgb(215, 25, 28);'
+    text = '''
+    Patient 3986 has been identified as having 'immediate' need of intensive care. 
+    Immediate status indicates a likely need for ICU admission within 1 hour. 
+    The main factors contributing to this estimate are: diagnoisis information
+    ("aneurysm"), admission type ("EMERGENCY"), admission location ("CLINICAL 
+    REFERRAL/PREMATURE"), and gender ("M").
+    '''
+    los = 5.19
   else:
     return render_template('example-error.html',id=request.form.get('patientid'))
 

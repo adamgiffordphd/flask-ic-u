@@ -36,11 +36,11 @@
     <br><br>
     <form action="/display-example" method="post">
       <label for="patientid">Patient ID:</label>
-      <input type="text" id="patientid" name="patientid" value='88409'><br>
+      <input type="text" id="patientid" name="patientid" value='5285 '><br>
       <h3>Demographic Information</h3>
       <label for="age">Age:</label>
       <select name="age" id="age">
-        <option value="28">28</option>
+        <option value="60">60</option>
         <option value="nan">--</option>
         <option value="0">0</option>
         <option value="1">1</option>
@@ -169,9 +169,10 @@
       </select><br>
       <label for="gender">Gender:</label>
       <select name="gender" id="gender">
-        <option value="male">M</option>
-        <option value="null">--</option>
-        <option value="female">F</option>
+        <option value="F">F</option>
+        <option value="F">--</option>
+        <option value="F">F</option>
+        <option value="M">M</option>
       </select><br>
       <label for="religion">Religion:</label>
       <select name="religion" id="religion">
@@ -203,7 +204,7 @@
       </select><br>
       <label for="language">Language:</label>
       <select name="language" id="language">
-        <option value="SPAN">SPAN</option>
+        <option value="ENGL">ENGL</option>
         <option value="***">--</option>
         <option value="ENGL">ENGL</option>
         <option value="HAIT">HAIT</option>
@@ -314,7 +315,7 @@
       </select><br>
       <label for="ethnicity">Ethnicity:</label>
       <select name="ethnicity" id="ethnicity">
-        <option value="HISPANIC/LATINO">HISPANIC/LATINO</option>
+        <option value="WHITE">WHITE</option>
         <option value="UNKNOWN">--</option>
         <option value="WHITE">WHITE</option>
         <option value="BLACK">BLACK</option>
@@ -331,7 +332,7 @@
       <h3>Admissions Information</h3>
       <label for="admissiontype">Admission Type:</label>
       <select name="admissiontype" id="admissiontype">
-        <option value="EMERGENCY">EMERGENCY</option>
+        <option value="ELECTIVE">ELECTIVE</option>
         <option value="ELECTIVE">--</option>
         <option value="ELECTIVE">ELECTIVE</option>
         <option value="EMERGENCY">EMERGENCY</option>
@@ -340,7 +341,7 @@
       </select><br>
       <label for="admissionlocation">Admission Location:</label>
       <select name="admissionlocation" id="admissionlocation">
-        <option value="EMERGENCY ROOM ADMIT">EMERGENCY ROOM ADMIT</option>
+        <option value="PHYS REFERRAL/NORMAL DELI">PHYS REFERRAL/NORMAL DELI</option>
         <option value="** INFO NOT AVAILABLE **">--</option>
         <option value="PHYS REFERRAL/NORMAL DELI">PHYS REFERRAL/NORMAL DELI</option>
         <option value="TRANSFER FROM HOSP/EXTRAM">TRANSFER FROM HOSP/EXTRAM</option>
@@ -356,7 +357,7 @@
       </select><br>
       <label for="insurance">Insurance:</label>
       <select name="insurance" id="insurance">
-        <option value="Government">Government</option>
+        <option value="Private">Private</option>
         <option value="Medicare">--</option>
         <option value="Medicare">Medicare</option>
         <option value="Self Pay">Self Pay</option>
@@ -366,9 +367,69 @@
       </select><br><br>
       <h3>Clinical Information</h3>
       <label for="diagnosis">Preliminary Diagnoses:</label><br>
-      <textarea id="diagnosis" name="diagnosis" rows="2" cols="70">L ARM INFECTION</textarea><br>
+      <div class="text editable" id="diagnosis" name="diagnosis">
+CORONARY ARTERY DISEASE SDA AORTIC VALVE REPLACEMENT STERNOTOMY
+      </div><br>
       <label for="clinicalnotes">Clinical Notes:</label><br>
-      <textarea id="clinicalnotes" name="clinicalnotes" rows="5" cols="70"></textarea>
+      <div class="text editable" id="clinicalnotes" name="clinicalnotes">
+carotid series complete clip clip number radiology reason preop cad admitting diagnosis coronary 
+artery disease sda aortic valve replacement sternotomy hospital medical condition year old woman 
+pre op cabg reason examination eval stenosis final report carotid series complete reason preop cabg 
+findings duplex evaluation performed bilateral carotid arteries mild plaque seen proximal ica distal 
+cca bilaterally minimal diastolic flow seen bilaterally common carotid internal carotid vertebral 
+arteries likely consistent aortic valve disease right peak velocities cm sec ica cca eca respectively 
+consistent less ica stenosis left peak velocities cm sec ica cca eca respectively consistent less 
+stenosis antegrade vertebral flow bilaterally impression bilateral less ica stenosis  ct neck contrast 
+egparotids clip clip number radiology reason eval cause hoarseness quality aorta pre op cabg admitting 
+diagnosis coronary artery disease sda aortic valve replacement sternotomy contrast optiray amt hospital 
+medical condition year old woman pre op cabg avr mvr reason examination eval cause hoarseness quality 
+aorta pre op cabg avr mvr contraindications iv contrast provisional findings impression pfi kyg wed 
+findings explain symptoms hoarseness specifically evidence mass along course recurrent laryngeal nerve 
+slight asymmetric dilatation right piriform sinus evidence vocal cord palsy recommend evaluation ent 
+laryngoscopy emphysema final report clinical history year old female new onset hoarseness pre op study 
+prior re do cabg avr mvr comparison none technique contrast enhanced mdct acquired axial images neck 
+skull base lung apices findings soft tissues neck normal mass identified along course recurrent laryngeal 
+nerves note made asymmetric dilatation right piriform sinus however medialization vocal cord secondary 
+evidence vocal cord paralysis neck vessels normally opacified without evidence stenosis mild atherosclerotic 
+calcification seen origin bilateral internal carotid arteries enlarged lymph nodes identied neck small lymph 
+nodes seen superior mediastinum however none meets ct criteria pathologic enlargement limited views lung 
+apices demonstrate moderately severe panlobular emphysema post surgical changes related median sternotomy 
+identified visualized paranasal sinuses show mild right maxillary mucosal thickening impression mass 
+lymphadenopathy ct finding explain new symptom hoarseness note made asymmetric dilatation right piriform 
+sinus however primary secondary evidence vocal cord palsy recommend direct evaluation including laryngoscopy 
+ent service moderately severe emphysema mild atherosclerosis mural calcification involving origin bilateral 
+internal carotid arteries aortic arch over ct neck contrast egparotids clip clip number radiology reason eval 
+cause hoarseness quality aorta pre op cabg admitting diagnosis coronary artery disease sda aortic valve 
+replacement sternotomy contrast optiray amt final report cont discussed ms last titles np cardiac surgery 
+service dr last stitle last lf first lf r csurg fa ct neck contrast egparotids clip clip number radiology 
+reason eval cause hoarseness quality aorta pre op cabg admitting diagnosis coronary artery disease sda aortic 
+valve replacement sternotomy contrast optiray amt hospital medical condition year old woman pre op cabg avr 
+mvr reason examination eval cause hoarseness quality aorta pre op cabg avr mvr contraindications iv contrast 
+pfi report findings explain symptoms hoarseness specifically evidence mass along course recurrent laryngeal 
+nerve slight asymmetric dilatation right piriform sinus evidence vocal cord palsy recommend evaluation ent 
+laryngoscopy emphysema  cta chest ww crecons non coronary clip clip number radiology reason eval aorta 
+calcification pseudoaneurysm arch admitting diagnosis coronary artery disease sda aortic valve replacement 
+sternotomy hospital medical condition year old woman redo redo cabg pre op avr mvr reason examination eval 
+aorta calcification pseudoaneurysm arch contraindications iv contrast provisional findings impression pfi 
+first namepattern doctor first evidence aortic dissection aneurysm pseudoaneurysm evidence leak around aortic 
+graft final report history year old female status post replacement ascending aorta resuspension aortic valve 
+coronary artery bypass preop redo aortic valve replacement due aortic insufficiency evaluate aorta calcification 
+pseudoaneurysm arch comparison mdct performed technique mdct chest performed administration intravenous contrast 
+images reformatted axial sagittal coronal oblique planes findings status post ascending aorta repair multiple 
+surgical clips demonstrated within mediastinum thoracic aorta demonstrates evidence aortic dissection intramural 
+hematoma aneurysmal pseudoaneurysmal dilatation mild diffuse atherosclerotic disease seen throughout thoracic 
+aorta minimal calcification present aortic arch appears unchanged compared prior study patent left main coronary 
+artery origin patent stents seen lcx lad origin rca cannot identified which occluded proximal portion rca seen 
+filled right internal mammary artery filling defect within pulmonary artery branches suggestive pulmonary embolism 
+presence mm right hilar lymph node pathologically enlarged mediastinal axillary lymph nodes according ct size criteria 
+lung window images demonstrate severe emphysematous change within apices bilaterally appears unchanged compared 
+prior study pleural effusion bone windows suspicious lytic sclerotic lesions present degenerative changes present 
+spine impression status post ascending aorta repair evidence aortic dissection pseudoaneurysm minimum calcification 
+aortic arch unchanged compared prior study over cta chest ww crecons non coronary clip clip number radiology reason 
+eval aorta calcification pseudoaneurysm arch admitting diagnosis coronary artery disease sda aortic valve replacement 
+sternotomy final report cont marked emphysematous changes upper lobes appears unchanged compared prior study mm right 
+hilar lymph node creased size prior study follow ct months recommended ensure stability finding
+      </div>
       <br><br>
       <input type="submit" value="Submit">
     </form>

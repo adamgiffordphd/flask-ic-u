@@ -36,12 +36,12 @@
     <br><br>
     <form action="/display-example" method="post">
       <label for="patientid">Patient ID:</label>
-      <input type="text" id="patientid" name="patientid" value='88409'><br>
+      <input type="text" id="patientid" name="patientid" value='43320'><br>
       <h3>Demographic Information</h3>
       <label for="age">Age:</label>
       <select name="age" id="age">
-        <option value="28">28</option>
-        <option value="nan">--</option>
+        <option value="74">74</option>
+        <option value="65">--</option>
         <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
@@ -169,13 +169,14 @@
       </select><br>
       <label for="gender">Gender:</label>
       <select name="gender" id="gender">
-        <option value="male">M</option>
-        <option value="null">--</option>
-        <option value="female">F</option>
+        <option value="M">M</option>
+        <option value="F">--</option>
+        <option value="F">F</option>
+        <option value="M">M</option>
       </select><br>
       <label for="religion">Religion:</label>
       <select name="religion" id="religion">
-        <option value="NOT SPECIFIED">NOT SPECIFIED</option>
+        <option value="PROTESTANT QUAKER">PROTESTANT QUAKER</option>
         <option value="NOT SPECIFIED">--</option>
         <option value="CATHOLIC">CATHOLIC</option>
         <option value="JEWISH">JEWISH</option>
@@ -203,7 +204,7 @@
       </select><br>
       <label for="language">Language:</label>
       <select name="language" id="language">
-        <option value="SPAN">SPAN</option>
+        <option value="ENGL">ENGL</option>
         <option value="***">--</option>
         <option value="ENGL">ENGL</option>
         <option value="HAIT">HAIT</option>
@@ -331,7 +332,7 @@
       <h3>Admissions Information</h3>
       <label for="admissiontype">Admission Type:</label>
       <select name="admissiontype" id="admissiontype">
-        <option value="EMERGENCY">EMERGENCY</option>
+        <option value="ELECTIVE">ELECTIVE</option>
         <option value="ELECTIVE">--</option>
         <option value="ELECTIVE">ELECTIVE</option>
         <option value="EMERGENCY">EMERGENCY</option>
@@ -340,7 +341,7 @@
       </select><br>
       <label for="admissionlocation">Admission Location:</label>
       <select name="admissionlocation" id="admissionlocation">
-        <option value="EMERGENCY ROOM ADMIT">EMERGENCY ROOM ADMIT</option>
+        <option value="PHYS REFERRAL/NORMAL DELI">PHYS REFERRAL/NORMAL DELI</option>
         <option value="** INFO NOT AVAILABLE **">--</option>
         <option value="PHYS REFERRAL/NORMAL DELI">PHYS REFERRAL/NORMAL DELI</option>
         <option value="TRANSFER FROM HOSP/EXTRAM">TRANSFER FROM HOSP/EXTRAM</option>
@@ -356,7 +357,7 @@
       </select><br>
       <label for="insurance">Insurance:</label>
       <select name="insurance" id="insurance">
-        <option value="Government">Government</option>
+        <option value="Medicare">Medicare</option>
         <option value="Medicare">--</option>
         <option value="Medicare">Medicare</option>
         <option value="Self Pay">Self Pay</option>
@@ -366,9 +367,41 @@
       </select><br><br>
       <h3>Clinical Information</h3>
       <label for="diagnosis">Preliminary Diagnoses:</label><br>
-      <textarea id="diagnosis" name="diagnosis" rows="2" cols="70">L ARM INFECTION</textarea><br>
+      <div class="text editable" id="diagnosis" name="diagnosis">BLADDER CANCER SDA</div><br>
       <label for="clinicalnotes">Clinical Notes:</label><br>
-      <textarea id="clinicalnotes" name="clinicalnotes" rows="5" cols="70"></textarea>
+      <div class="text editable" id="clinicalnotes" name="clinicalnotes">
+portable abdomen clip clip number radiology reason please verify ureteral stent placement admitting 
+diagnosis bladder cancer sda hospital medical condition year old man cystectomy reason examination 
+please verify ureteral stent placement wet read ehab tue right lower quadrant ostomy two stents 
+coursing superiorly right left exact location indeterminate single view pelvic surgical clips midline 
+surgical staples seen possible left lower pelvic drain incompletely imaged enteric catheter likely 
+terminates stomach sternal wires incompletely imaged air stool seen colon final report history year 
+old male status post radical cystectomy prostatectomy evaluation ureteral stent placement comparison 
+comparison made ct abdomen pelvis findings non obstructive bowel gas pattern air filled loops colon air 
+rectum right lower quadrant ostomy two overlying stents seen coursing superiorly stent overlying projected 
+course left ureter overlying projected course right ureter exact location difficult determine single view 
+please correlate position stent placement time procedure multiple surgical clips seen pelvis initials 
+namepattern last namepattern location un drain seen lower portion pelvis vertical midline skin staples seen 
+lower abdomen pelvis enteric tube distal tip body stomach median sternotomy wires seen impression bilateral 
+stents seen projected course mid distal ureters exact position difficult determine image without knowledge 
+postsurgical anatomy position stents time placement please correlate positioning time procedure  chest 
+portable ap clip clip number radiology reason pleural effusion admitting diagnosis bladder cancer sda 
+hospital medical condition year old man history afib radical cystectomy reason examination pleural effusion 
+final report type examination chest ap portable single view indication year old male history atrial 
+fibrillation status post radical cystectomy evaluate pleural effusion findings ap single view chest obtained 
+semi upright sitting position analysis performed direct comparison next preceding pa lateral chest examination 
+high positioned diaphragms explained recent abdominal surgical intervention bilateral small amount 
+subdiaphragmatic air present moderate cardiac enlargement present status post sternotomy apparently related 
+previous aortic valve replacement metallic prosthesis noted within heart shadow aortic appearance unaltered 
+pulmonary vasculature congested lateral pleural sinuses free thus evidence pleural effusion portable 
+examination pneumothorax identified apical area possibly present small amounts pleural effusion could expected 
+posterior pleural sinuses cannot identified single ap chest view  abdomen supine erect clip clip number 
+radiology reason ngt evaluation admitting diagnosis bladder cancer sda hospital medical condition year old 
+man post operative ileus s cystectomy conduit ngt placement reason examination ngt evaluation final report 
+history ng tube placement findings nasogastric tube extends upper stomach dilated loops appear large small 
+bowel consistent adynamic ileus however clinical concern obstruction ct obtained evidence free intraperitoneal 
+gas beneath hemidiaphragms presumably related recent surgery
+      </div>
       <br><br>
       <input type="submit" value="Submit">
     </form>

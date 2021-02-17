@@ -42,5 +42,9 @@
     <p>{{ text | safe }}</p>
 
     <h3>Estimated LOS: {{ los | safe }} days</h3>
+    <br>
+    {% if exs['questionable']=='active' %} 
+      <h4><a href="examples?ex=questionable&update=true">See what happens when this patient's data is updated</a></h4>
+    {% endif %}
 </div>
 {% endblock %}
