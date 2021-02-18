@@ -1,13 +1,15 @@
 from flask import Flask, render_template, request, current_app, url_for
-from bokeh.plotting import figure
-from bokeh.palettes import Spectral4
-from bokeh.models import ColumnDataSource, HoverTool
+from bokeh.plotting import figure, show
+from bokeh.palettes import Spectral4, Viridis256
+from bokeh.models import (ColumnDataSource, HoverTool, 
+      CustomJS, Select, LinearColorMapper, ColumnDataSource, ColorBar)
 from bokeh.embed import components
 # from bokeh.resources import CDN
-from bokeh.layouts import Column
+from bokeh.layouts import column
 import numpy as np
 import pandas as pd
 import pickle
+from copy import copy
 
 app = Flask(__name__)
 app.vars = {}
@@ -86,7 +88,7 @@ def make_urgency_plot(y_pred_proba):
   )
   
   p = figure(x_range=factors, plot_height=250,
-          plot_width=450, tools=[hover])
+          plot_width=450, tools=[hover], title="Urgency Score Probabilities")
 
   p.vbar(x='factors', top='probs', color='color', width=0.4, source=source)
 
@@ -198,7 +200,7 @@ def display():
   # app.vars['TEXT'] = request.form.get('clinicalnotes') # not implemented yet, so do nothing 
                                                          # with clinical notes at this time
   x_test = pd.DataFrame.from_dict(app.vars, orient = 'columns')
-  print(x_test.columns)
+
   # y_pred_urg, y_pred_proba_urg, y_pred_los = make_predictions(x_test)
   y_pred_urg, y_pred_proba_urg = make_predictions(x_test)
 
@@ -212,7 +214,7 @@ def display():
 
   p_urg = make_urgency_plot(y_pred_proba_urg)
   p_urg_factors = make_urgency_factors_plot(most_imp_feats_urg)
-  layout = Column(p_urg, p_urg_factors)
+  layout = column(p_urg, p_urg_factors)
   script, div = components(layout)
 
   return render_template('display.html',
@@ -220,7 +222,80 @@ def display():
 
 @app.route('/performance')
 def performance():
-  return render_template('performance.html')
+  urg_cf_file = './performance/cf__URGENCY__for_model_20210216.pkl'
+  urg_data = pickle.load(open(urg_cf_file,'rb'))
+
+  source = ColumnDataSource(data=urg_data)
+
+  mapper = LinearColorMapper(
+    palette=Viridis256,
+    low=0,
+    high=urg_data['true'].max()
+  )
+  color_bar = ColorBar( color_mapper=mapper, location=( 0, 0))
+
+  TOOLTIPS = [
+    ("(Pred., True)", "(@x, @y)"),
+    ("Raw Count", "@raw"),
+    ("Norm. by True", "@true{1.111}"),
+    ("Norm. by Pred.", "@pred{1.111}"),
+    ("Norm. by Total", "@all{1.111}")
+  ]
+
+  labels = ['stable','questionable','urgent','immediate']
+  fig = figure(title="Confusion Matrix", tooltips=TOOLTIPS, toolbar_location=None,
+            x_range=labels, y_range=labels[-1::-1], plot_height=500, plot_width=600)
+  rect = fig.rect('y', 'x', source=source, fill_color={'field': 'color', 'transform': mapper}, line_color='black', width=1, height=1)
+  fig.add_layout(color_bar, 'right')
+
+
+  fig.xaxis.axis_label = 'Predicted'
+  fig.yaxis.axis_label = 'True'
+  fig.title.text_font_size = '16pt'
+  fig.yaxis.axis_label_text_font_size = '14pt'
+  fig.xaxis.axis_label_text_font_size = '14pt'
+  fig.yaxis.major_label_text_font_size = '11pt'
+  fig.xaxis.major_label_text_font_size = '11pt'
+
+  opts = ['Raw Counts', 'Normalize by True Labels', 'Normalize by Predicted Labels', 'Normalize by Total']
+  select = Select(title="Plot Options:", value=opts[1], options=opts)
+
+  codec = """
+      var data = source.data;
+      var f = select.value;
+      const {transform} = rect.glyph.fill_color;
+      switch(f) {
+        case "Raw Counts":
+            data['color'] = data['raw'];
+            break;
+        case "Normalize by True Labels":
+            data['color'] = data['true'];
+            break;
+        case "Normalize by Predicted Labels":
+            data['color'] = data['pred'];
+            break;
+        case "Normalize by Total":
+            data['color'] = data['all'];
+            break;
+        default:
+            data['color'] = data['true'];
+      }
+      transform.low = 0;
+      transform.high = Math.max.apply(Math,data['color']);
+      rect.glyph.fill_color = {field: 'color', transform: transform};
+      // necessary becasue we mutated source.data in-place
+      source.change.emit();
+      p.reset.emit()
+  """
+  update_cm = CustomJS(args=dict(source=source, select=select, rect=rect, 
+                               fig=fig), code=codec)
+  select.js_on_change('value', update_cm)
+
+  layout = column(select, fig)
+  script, div = components(layout)
+
+  return render_template('performance.html',
+                          script=script, div=div)
 
 @app.route('/display-example', methods=['POST'])
 def displayexample():
@@ -260,7 +335,7 @@ def displayexample():
     Patient 5285 has been identified as having 'urgent' need of intensive care. 
     Urgent status indicates a likely need for ICU admission within 24 hours. 
     The main factors contributing to this estimate are: gender ("F"), 
-    diagnosis information ("aortic", "aorta", "asymmetric").
+    diagnosis information ("aortic"), and clinical notes ("aorta", "asymmetric").
     '''
     los = 4.04
   elif int(request.form.get('patientid'))==3986:
@@ -283,7 +358,7 @@ def displayexample():
 
   p_urg, risk = make_urgency_plot(y_pred_proba_urg)
   p_urg_factors = make_urgency_factors_plot(most_imp_feats_urg)
-  layout = Column(p_urg, p_urg_factors)
+  layout = column(p_urg, p_urg_factors)
   script, div = components(layout)
 
   return render_template('display.html',

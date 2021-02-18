@@ -7,7 +7,8 @@
 
 <script 
     src="https://cdn.bokeh.org/bokeh/release/bokeh-2.2.3.min.js"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous">
+</script>
 
 {% endblock %}
 
@@ -35,7 +36,7 @@
 {% block content %}
 <div class="standard">
     <h1>Results from IC-U</h1>
-    <h3 class="figtitle">IC-U Risk Factor: <span style="{{ color | safe }}">{{ risk | safe }}</span></h3>
+    <h2>IC-U Risk Factor: <span style="{{ color | safe }}">{{ risk | safe }}</span></h2>
     {{ div | safe }}
     {{ script | safe }}
     <br>

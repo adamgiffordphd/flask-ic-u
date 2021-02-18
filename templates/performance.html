@@ -5,6 +5,17 @@
 
 {% block html_head %}
 <meta name="description" content="Performance">
+
+<script 
+  type="text/javascript" 
+  src="https://cdn.bokeh.org/bokeh/release/bokeh-2.2.3.min.js" 
+  crossorigin="anonymous">
+</script>
+<script 
+  type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.2.3.min.js" 
+  crossorigin="anonymous">
+</script>
+
 {% endblock %}
 
 {% block sidebar %}
@@ -31,5 +42,7 @@
 {% block content %}
 <div class="standard">
     <h1>Model Performance</h1>
+    {{ div | safe }}
+    {{ script | safe }}
 </div>
 {% endblock %}
