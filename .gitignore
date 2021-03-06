@@ -1,6 +1,4 @@
 **/*.jpeg
-models/
 .DS_Store
 __pycache__/
 examples/
-performance/
