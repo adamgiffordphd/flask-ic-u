@@ -3,6 +3,8 @@ from sklearn.base import BaseEstimator, TransformerMixin, RegressorMixin
 import numpy as np
 import pandas as pd
 import re
+import nltk
+nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk import word_tokenize
 
