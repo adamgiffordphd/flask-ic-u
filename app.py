@@ -16,23 +16,17 @@ with open(urg_model, 'rb') as f:
   urg_onehot = urg_est.named_steps.features.transformer_list[0][1].transformer_list[1][1]
   urg_text_cvt = urg_est.named_steps.features.transformer_list[1][1].named_steps.count
 
-los_model = './models/log__URGENCY__20210130.pkl'
-# with open(los_model, 'rb') as f:
-#   los_dict = pickle.load(f)
-#   los_ohe = los_dict['ohe_categoricals']
-#   los_ohe = los_dict['ohe_categoricals']
-#   los_feat_un = los_dict['feature_union']
-#   los_count_vect = los_dict['count_vectorizor']
-#   los_est = los_dict['estimator']
-#   del los_dict
+los_model = './models/gradientboost__LOS__20210305_forFlask_from_20210215.pkl'
+with open(los_model, 'rb') as f:
+  los_dft, los_est = pickle.load(f)
 
-def make_predictions(x_test, urgency=True, los=False):
+def make_predictions(x_test, urgency=True, los=True):
   # get prediction from model
   y_pred_urg = int(urg_est.predict(x_test)[0])
   y_pred_proba_urg = urg_est.predict_proba(x_test)[0]
-  # y_pred_los = los_est.predict(x_test)
+  y_pred_los = (100*los_est.predict(x_test)[0]//1)/100
 
-  return y_pred_urg, y_pred_proba_urg #, y_pred_los
+  return y_pred_urg, y_pred_proba_urg, y_pred_los
 
 @app.route('/')
 def intro():
@@ -101,26 +95,35 @@ def display():
     'ICU_URGENCY': [0],
     'SAMEDAY_EVENT_TO_ICU': [0]
   }
+  facts_dict = {
+        'immediate': 'inactive',
+        'urgent': 'inactive',
+        'questionable': 'inactive',
+        'stable': 'inactive'
+    }
 
   x_test = pd.DataFrame.from_dict(app.vars, orient = 'columns')
 
-  # y_pred_urg, y_pred_proba_urg, y_pred_los = make_predictions(x_test)
-  y_pred_urg, y_pred_proba_urg = make_predictions(x_test)
+  y_pred_urg, y_pred_proba_urg, y_pred_los = make_predictions(x_test)
+  # y_pred_urg, y_pred_proba_urg = make_predictions(x_test)
 
   feature_names_urg = viz.getFeatureNames(urg_onehot, urg_text_cvt, ['ADMIT_AGE'])
-  # feature_names_los = getFeatureNames(los_ohe, los_diagn_vect.named_steps.count,
-  #                                   num_cols)                 
-  feature_imp_urg = viz.createFeatureCoeffDict(urg_est.best_estimator_.named_steps.reg.coef_[y_pred_urg],
+  # feature_names_los = viz.getFeatureNames(urg_onehot, los_text_cvt, ['ADMIT_AGE'])
+
+  feature_imp_urg = viz.createFeatureCoeffDict(urg_est.named_steps.reg.coef_[y_pred_urg],
                                         feature_names_urg)
   most_imp_feats_urg = viz.getMostImportantFeaturesUrg(urg_feature_union, feature_imp_urg, x_test)
 
-  p_urg = viz.make_urgency_plot(y_pred_proba_urg)
+  p_urg, risk = viz.make_urgency_plot(y_pred_proba_urg)
   p_urg_factors = viz.make_urgency_factors_plot(most_imp_feats_urg)
   layout = column(p_urg, p_urg_factors)
   script, div = components(layout)
+  color, text = viz.get_viz_metadata(app.vars['SUBJECT_ID'][0],
+                                y_pred_urg, [feat[0] for feat in most_imp_feats_urg])
 
   return render_template('display.html',
-                          script=script, div=div)
+                          script=script, div=div, text=text, los=y_pred_los,
+                          risk=risk,exs=facts_dict,color=color)
 
 @app.route('/performance')
 def performance():
@@ -147,22 +150,22 @@ def displayexample():
   if request.form.get('patientid')=='43320':
     example_file = './examples/stable_examp_loc68757_20210216.pkl'
     exs_dict['stable'] = 'active'
-    color, text, los = viz.get_stable_ex()
+    color, text, los = viz.get_example('stable')
 
   elif request.form.get('patientid')=='5285':
     example_file = './examples/questionable_pre-urgent_examp_loc10545_20210216.pkl'
     exs_dict['questionable'] = 'active'
-    color, text, los = viz.get_questionable_ex()
+    color, text, los = viz.get_example('questionable')
 
   elif request.form.get('patientid')=='5285 ':
     example_file = './examples/urgent_examp_loc10547_20210216.pkl'
     exs_dict['urgent'] = 'active'
-    color, text, los = viz.get_urgent_ex()
+    color, text, los = viz.get_example('urgent')
 
   elif request.form.get('patientid')=='3986':
     example_file = './examples/immediate_examp_loc8065_20210216.pkl'
     exs_dict['immediate'] = 'active'
-    color, text, los = viz.get_immediate_ex()
+    color, text, los = viz.get_example('immediate')
 
   else:
     return render_template('example-error.html',id=request.form.get('patientid'))

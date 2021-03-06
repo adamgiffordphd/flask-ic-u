@@ -13,12 +13,13 @@ stopWords.extend(['the','and','to','of','was','with','a','on','in','for',
 'name','is','patient','s','he','at','as','or','one','she','his','her','am',
 'were','you','pt','pm','by','be','had','your','this','date','from','there',
 'an','that','p','are','have','has','h','but','o','namepattern','which','every',
-'also'])
+'also', ',', '.', ';', '/', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
+'-', '_', '=', '+', '{', '}', '[', ']', '|',':', '"', "'", '<', '>', '?'])
 stopWords = set(stopWords)
 
 class DateTimeTransformer(BaseEstimator, TransformerMixin):
     
-    def __init__(self, datecols):
+    def __init__(self, dateus):
         self.datecols = datecols
         
     def fit(self, X, y=None):
@@ -81,10 +82,50 @@ class ColumnSelectTransformer(BaseEstimator, TransformerMixin):
         # column for each in self.col_names
         
         if type(X)==pd.core.frame.DataFrame:
-            return np.hstack([X[col].to_numpy().reshape(-1,1) for col in self.col_names])
+            return X[self.col_names]
+#             return np.hstack([X[col].to_numpy().reshape(-1,1) for col in self.col_names]).tolist()
         else:
+            if not isinstance(self.col_names,list):
+                self.col_names = list(self.col_names)
+                
             return [[row[col] for col in self.col_names] for row in X]
+
+class ColumnMergeTransformer(BaseEstimator, TransformerMixin):
     
+    def __init__(self, col_names):
+        self.col_names = col_names  # We will need these in transform()
+    
+    def fit(self, X, y=None):
+        # This transformer doesn't need to learn anything about the data,
+        # so it can just return self without any further processing
+        self.new_col = '_'.join([str(col) for col in self.col_names])
+        return self
+    
+    def transform(self, X):
+        # Return an array with the same number of rows as X and one
+        # column for each in self.col_names
+        
+        if type(X)==pd.core.frame.DataFrame:
+            if X[self.col_names[0]].dtype=='float64':
+                X.loc[:,self.new_col] = -X.loc[:,self.col_names[0]]
+            else:
+                X.loc[:,self.new_col] = ''
+                
+            for col in self.col_names:
+                X.loc[:,self.new_col] = X.loc[:,self.new_col] + X.loc[:,col]
+            return X
+        else:
+            if isinstance(X[0][0],str):
+                X_merged = [[''] for row in X]
+            else:
+                X_merged = [[-row[0]] for row in X]
+                
+            X_merged = [[m_row[0] + col] for m_row,row in zip(X_merged,X) for col in row]
+#             for ix,row in enumerate(X):
+#                 for col in row:
+#                     X_merged[ix] += col
+            return X_merged
+        
 class EthnicityTransformer(BaseEstimator, TransformerMixin):
     
     def __init__(self):
@@ -153,9 +194,66 @@ class EthnicityTransformer(BaseEstimator, TransformerMixin):
             
 class DiagnosisFrameTransformer(BaseEstimator, TransformerMixin):
     
+    def __init__(self, col_names):
+        self.stopWords = stopWords
+        self.regex_split = re.compile(r'[\|/;|,\s]')
+        self.regex_sub1 = re.compile(r"[\|/\.-]+")
+        self.regex_sub2 = re.compile(r'\s{2,}')
+#             self.regex_rem1 = re.compile(r'[\d]+\b') # looks for, e.g., '01 '
+        self.regex_rem1 = re.compile(r'[\d]+[a-zA-Z]*?\b')  # looks for, e.g., '01 ' and, e.g., '1st '
+        self.regex_rem2 = re.compile(r'[^a-zA-Z\s]+')
+        self.col_names = col_names
+
+
+    def fit(self, X, y=None):
+        # This transformer doesn't need to learn anything about the data,
+        # so it can just return self without any further processing
+        return self
+            
+    def remove_stopwords(self,d_list):
+        return [d for d in d_list if d not in self.stopWords]
+    
+    def _transform(self,x):
+        cleaned_x = []
+        for row in x:
+            if pd.isna(row):
+                row = ''
+                
+            row = row.strip()
+            
+            row = row.replace('\\',' ')
+            row = row.replace("'",' ')
+            row = self.regex_rem1.sub('', row)
+            row_list = self.regex_split.split(row)
+            row_list = [d.strip().lower() for d in row_list]
+            row_list = self.remove_stopwords(row_list)
+
+            row = ' '.join(row_list)
+            row = self.regex_sub1.sub(' ', row)
+            row = self.regex_rem2.sub('', row)
+            cleaned_row = self.regex_sub2.sub(' ', row)
+            
+            cleaned_x.append(cleaned_row)
+
+        return cleaned_x
+    
+    def transform(self,X):
+        for col in self.col_names:
+            X[col] = self._transform(X[col])
+        return X
+        
+class DiagnosisArrayTransformer(BaseEstimator, TransformerMixin):
+    
     def __init__(self):
         self.stopWords = stopWords
-    
+        self.regex_split = re.compile(r'[\|/;|,\s]')
+        self.regex_sub1 = re.compile(r"[\|/\.-]+")
+        self.regex_sub2 = re.compile(r'\s{2,}')
+#             self.regex_rem1 = re.compile(r'[\d]+\b') # looks for, e.g., '01 '
+        self.regex_rem1 = re.compile(r'[\d]+[a-zA-Z]*?\b')  # looks for, e.g., '01 ' and, e.g., '1st '
+        self.regex_rem2 = re.compile(r'[^a-zA-Z\s]+')
+
+
     def fit(self, X, y=None):
         # This transformer doesn't need to learn anything about the data,
         # so it can just return self without any further processing
@@ -171,18 +269,19 @@ class DiagnosisFrameTransformer(BaseEstimator, TransformerMixin):
                 col = ''
                 
             col = col.strip()
-
-            regex_split = re.compile(r'[\|/;|,]')
-            regex_sub1 = re.compile(r"[\|/\.-]+")
-
+            
             col = col.replace('\\',' ')
             col = col.replace("'",' ')
-            col_list = regex_split.split(col)
+            col = self.regex_rem1.sub('', col)
+            col_list = self.regex_split.split(col)
             col_list = [d.strip().lower() for d in col_list]
             col_list = self.remove_stopwords(col_list)
 
             col = ' '.join(col_list)
-            cleaned_col = regex_sub1.sub(' ', col)
+            col = self.regex_sub1.sub(' ', col)
+            col = self.regex_rem2.sub('', col)
+            cleaned_col = self.regex_sub2.sub(' ', col)
+            
             cleaned_x.append(cleaned_col)
 
         return cleaned_x

@@ -33,51 +33,94 @@ def getMostImportantFeaturesUrg(urg_feature_union, feature_imp_urg, x_test, n_mo
     most_important = sorted(features_scores, key=lambda x: abs(x[1]))
     return most_important[-n_most:]
 
+def get_viz_metadata(subjectid, urg_factor, urg_feats):
+    urg_levels = {
+        0: 'stable',
+        1: 'questionable',
+        2: 'urgent',
+        3: 'immediate'
+    }
+    colors = {
+        0: 'color:rgb(43, 131, 186);',
+        1: 'color:rgb(171, 221, 164);',
+        2: 'color:rgb(253, 174, 97);',
+        3: 'color:rgb(215, 25, 28);'
+    }
+    
+    text_0_base = '''
+        Patient {} has been identified as 'stable'. Stable status indicates that
+        the need for ICU admission is NOT likely within 5 days. The main factors 
+        contributing to this estimate are: 
+    '''
+    text_1_base = '''
+        Patient {} has been identified as 'questionable'. Questionable status indicates 
+        a likely need for ICU admission within 5 days. The main factors contributing to 
+        this estimate are: 
+    '''
+    text_2_base = '''
+        Patient {} has been identified as 'urgent'. Urgent status indicates a likely need 
+        for ICU admission within 24 hours. The main factors contributing to this estimate 
+        are: 
+    '''
+    text_3_base = '''
+        Patient {} has been identified as 'immediate'. Immediate status indicates a likely 
+        need for ICU admission within 1 hour. The main factors contributing to this 
+        estimate are: 
+    '''
+    text_dict = {
+        0: text_0_base,
+        1: text_1_base,
+        2: text_2_base,
+        3: text_3_base
+    }
+    gen_text_base = ', '.join(urg_feats[:-1]) + ', and ' + urg_feats[-1] + '.'
+    text = (text_dict[urg_factor] + gen_text_base).format(subjectid)
+
+    return colors[urg_factor], text
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # # # # # # # # # # # helper functions for examples # # # # # # # # # # # # # # # #
-def get_stable_ex():
-    color = 'color:rgb(43, 131, 186);'
-    text = '''
-    Patient 43320 has been identified as 'stable'. Stable status indicates that
-    the need for ICU admission is NOT likely within 5 days. The main factors 
-    contributing to this estimate are: gender ("M"), admission type 
-    ("ELECTIVE"), clinical notes ("cystectomy"), and language ("ENGL").
-    '''
-    los = 4.88
-    return color, text, los
+def get_example(example):
+    if example=='stable':
+        color = 'color:rgb(43, 131, 186);'
+        text = '''
+        Patient 43320 has been identified as 'stable'. Stable status indicates that
+        the need for ICU admission is NOT likely within 5 days. The main factors 
+        contributing to this estimate are: gender ("M"), admission type 
+        ("ELECTIVE"), clinical notes ("cystectomy"), and language ("ENGL").
+        '''
+        los = 4.88
+    elif example=='questionable':
+        color = 'color:rgb(171, 221, 164);'
+        text = '''
+        Patient 5285 has been identified as having 'questionable' need of intensive care. 
+        Questionable status indicates a likely need for ICU admission within 5 days. 
+        The main factors contributing to this estimate are: gender ("F"), 
+        diagnosis information ("aortic"), and clinical notes ("avr", "cabg").
+        '''
+        los = 4.02
 
-def get_questionable_ex():
-    color = 'color:rgb(171, 221, 164);'
-    text = '''
-    Patient 5285 has been identified as having 'questionable' need of intensive care. 
-    Questionable status indicates a likely need for ICU admission within 5 days. 
-    The main factors contributing to this estimate are: gender ("F"), 
-    diagnosis information ("aortic"), and clinical notes ("avr", "cabg").
-    '''
-    los = 4.02
-    return color, text, los
+    elif example=='urgent':
+        color = 'color:rgb(253, 174, 97);'
+        text = '''
+        Patient 5285 has been identified as having 'urgent' need of intensive care. 
+        Urgent status indicates a likely need for ICU admission within 24 hours. 
+        The main factors contributing to this estimate are: gender ("F"), 
+        diagnosis information ("aortic"), and clinical notes ("aorta", "asymmetric").
+        '''
+        los = 4.04
 
-def get_urgent_ex():
-    color = 'color:rgb(253, 174, 97);'
-    text = '''
-    Patient 5285 has been identified as having 'urgent' need of intensive care. 
-    Urgent status indicates a likely need for ICU admission within 24 hours. 
-    The main factors contributing to this estimate are: gender ("F"), 
-    diagnosis information ("aortic"), and clinical notes ("aorta", "asymmetric").
-    '''
-    los = 4.04
-    return color, text, los
+    else:
+        color = 'color:rgb(215, 25, 28);'
+        text = '''
+        Patient 3986 has been identified as having 'immediate' need of intensive care. 
+        Immediate status indicates a likely need for ICU admission within 1 hour. 
+        The main factors contributing to this estimate are: diagnoisis information
+        ("aneurysm"), admission type ("EMERGENCY"), admission location ("CLINICAL 
+        REFERRAL/PREMATURE"), and gender ("M").
+        '''
+        los = 5.19
 
-def get_immediate_ex():
-    color = 'color:rgb(215, 25, 28);'
-    text = '''
-    Patient 3986 has been identified as having 'immediate' need of intensive care. 
-    Immediate status indicates a likely need for ICU admission within 1 hour. 
-    The main factors contributing to this estimate are: diagnoisis information
-    ("aneurysm"), admission type ("EMERGENCY"), admission location ("CLINICAL 
-    REFERRAL/PREMATURE"), and gender ("M").
-    '''
-    los = 5.19
     return color, text, los
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
