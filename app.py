@@ -48,10 +48,6 @@ def examples():
     page = 'example-' + ex + '-update.html'
   return render_template(page)
 
-@app.route('/example-urg')
-def exampleurg():
-  return render_template('example-urg.html')
-
 @app.route('/about')
 def about():
   return render_template('about.html')
@@ -182,4 +178,4 @@ def displayexample():
                           risk=risk,exs=exs_dict,color=color)
 
 if __name__ == '__main__':
-  app.run(port=33507, debug=True)
+  app.run(port=33507)

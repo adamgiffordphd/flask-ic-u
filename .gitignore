@@ -1,4 +1,3 @@
 **/*.jpeg
 .DS_Store
 __pycache__/
-examples/
