@@ -104,7 +104,34 @@
         padding: 5px;
         overflow: auto;
       }
-      /* <span style="white-space: nowrap;"> */
+
+      .fa {
+        padding: 20px;
+        font-size: 30px;
+        width: 55px;
+        text-align: center;
+        text-decoration: none;
+        margin: 5px 2px;
+      }
+      
+      .fa:hover {
+          opacity: 0.7;
+      }
+
+      .fa-twitter {
+        background: #55ACEE;
+        color: white;
+      }
+
+      .fa-linkedin {
+        background: #007bb5;
+        color: white;
+      }
+
+      .fa-github {
+        background: black;
+        color: white;
+      }
     </style>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -114,6 +141,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   </head>
   <body>
@@ -121,7 +149,7 @@
     <div class="sidebar">
       {% block sidebar %}
       <a class="active" href="/">Intro</a>
-      <a href="/about">About</a>
+      <a href="/about">The Project</a>
       <a href="/iframe">Slide Deck</a>
       <a href="/howto">How-To</a>
       <div class="nav-second-level">
@@ -135,6 +163,7 @@
       </div>
       <a href="/forms">Get Started</a>
       <a href="/performance">Model Performance</a>
+      <a href="/aboutme">About Me</a>
       <div class="display">
         <a href="/display">Results</a>
       </div>

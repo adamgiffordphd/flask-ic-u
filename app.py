@@ -52,6 +52,10 @@ def examples():
 def about():
   return render_template('about.html')
 
+@app.route('/aboutme')
+def aboutme():
+  return render_template('aboutme.html')
+
 @app.route('/forms')
 def forms():
   return render_template('forms.html')

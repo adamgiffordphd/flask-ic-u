@@ -20,7 +20,7 @@
 
 {% block sidebar %}
 <a href="/">Intro</a>
-<a href="/about">About</a>
+<a href="/about">The Project</a>
 <a href="/iframe">Slide Deck</a>
 <a href="/howto">How-To</a>
 <div class="nav-second-level">
@@ -34,6 +34,7 @@
 </div>
 <a href="/forms">Get Started</a>
 <a class="active" href="/performance">Model Performance</a>
+<a href="/aboutme">About Me</a>
 <div class="display">
   <a href="/display">Results</a>
 </div>
@@ -42,6 +43,18 @@
 {% block content %}
 <div class="standard">
     <h1>Model Performance</h1>
+    <h2>IC-U Risk Factor</h2>
+    <p>
+      The IC-U risk factor model has an overall accuracy of 65%. The most likely predictions
+      for each risk category tended to be the true categories, as can be seen by the higher
+      percentages along the diagonal in the confusion matrix. In general, the predictions for 
+      the riskier categories (urgent and immediate) tended to be more accurate than those for
+      the less risky categories. <br> <br>
+      Feel free to interact with the figure below to explore the performance of the model in 
+      more detail. The dropdown menu allows you to view the performance breakdown of the model 
+      by raw counts, counts normalized by the true labels, counts normalized by the predicted 
+      labels, or counts normalized by the total number of entries in the test set.
+    </p>
     {{ div | safe }}
     {{ script | safe }}
 </div>

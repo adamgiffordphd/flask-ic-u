@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %} About IC-U {% endblock %}
+
+{% block html_head %}
+<meta name="description" content="width=device-width, initial-scale=1">
+{% endblock %}
+
+{% block sidebar %}
+<a href="/">Intro</a>
+<a href="/about">The Project</a>
+<a href="/iframe">Slide Deck</a>
+<a href="/howto">How-To</a>
+<div class="nav-second-level">
+  <a href="/examples">Examples</a>
+  <ul class="examples">
+    <li><a href="/examples?ex=stable">Stable</a></li>
+    <li><a href="/examples?ex=questionable">Questionable</a></li>
+    <li><a href="/examples?ex=urgent">Urgent</a></li>
+    <li><a href="/examples?ex=immediate">Immediate</a></li>
+  </ul>
+</div>
+<a href="/forms">Get Started</a>
+<a href="/performance">Model Performance</a>
+<a class="active" href="/aboutme">About Me</a>
+<div class="display">
+  <a href="/display">Results</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="standard">
+    <h1>About the Author</h1>
+    <img src="static/adam.jpg" alt="AdamGifford" style="max-width: 100%;">
+    <p>
+        Adam Gifford is a Fellow from The Data Incubator's Winter 2021 cohort and IC-U is his culminating
+        capstone project from the fellowship. Prior to fellowship, Adam received his PhD in neuroscience
+        from the University of Pennsylvania in 2016 and was a postdoctoral researcher for the past 3 years
+        at the University of Louisville. Adam currently lives in the Washington, D.C. metropolitan area with 
+        his wife, Jasmine, and their 4-year-old Bernese-lab mix, Bo.<br><br>
+        To learn more about Adam and his work, check out the following links:
+    </p>
+    <a href="https://www.linkedin.com/in/adam-m-gifford/" class="fa fa-linkedin"></a>
+    <a href="https://twitter.com/adamgifford_phd" class="fa fa-twitter"></a>
+    <a href="https://github.com/adamgiffordphd" class="fa fa-github"></a>
+    <!-- <ul>
+        <li style="font-size:30px"><a target="_blank" href="https://www.linkedin.com/in/adam-m-gifford/">LinkedIn</a>
+            
+        </li>
+        <li style="font-size:30px"><a target="_blank" href="https://twitter.com/adamgifford_phd">Twitter</a>
+            
+        </li>
+        <li style="font-size:30px"><a target="_blank" href="https://github.com/adamgiffordphd">GitHub</a>
+            
+        </li>
+    </ul> -->
+</div>
+{% endblock %}
