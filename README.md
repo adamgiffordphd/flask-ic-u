@@ -2,9 +2,6 @@
 
 This app is the web implementation for my capstone project , IC-U, for The Data Incubator. IC-U is an app that uses patient demographic and clinical information recorded during his/her stay at a hospital to predict an urgency score for potential intensive care needs and an etimated length of stay in the ICU. To see the GitHub page for project's data analysis and model implementation, go to [https://github.com/adamgiffordphd/imminent_icu_stays](https://github.com/adamgiffordphd/imminent_icu_stays). 
 
-The repository contains a basic template for a Flask configuration that will
-work on Heroku.
-
 The app is hosted on Heroku here: [https://ic-u.herokuapp.com](https://ic-u.herokuapp.com).
 
 ## Introduction
